@@ -1,0 +1,6 @@
+{
+    "watch": ["server"],
+    "ext": "ts,json",
+    "ignore": ["src/**/*.spec.ts", "./server/routes.ts", "./server/swagger.json"],
+    "exec": "cross-env NODE_ENV=development ts-node --files -P tsconfig.server.json server/index.ts"
+}

@@ -1,0 +1,36 @@
+# Dependency directory
+node_modules
+
+# Built
+dist/**/*
+.next
+
+#API keys and secrets
+.env
+.env.development
+.env.production
+.env.test
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+#Coverage(Test result)
+coverage
+mongoDB
+
+#Auto generated files by tsoa
+server/swagger.json
+server/routes.ts
+public/*.js
+public/*.map
+
+package-lock.json
+*-error.log
+next-env.d.ts
+
+
+#Log files
+logs
+*.log
+.persist

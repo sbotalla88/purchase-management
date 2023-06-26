@@ -1,0 +1,27 @@
+{
+    "entryFile": "server/index.ts",
+    "noImplicitAdditionalProperties": "throw-on-extras",
+    "controllerPathGlobs": ["server/controllers/**/*.controller.ts"],
+    "spec": {
+        "securityDefinitions": {
+            "basic": {
+                "type": "apiKey",
+                "name": "authorization",
+                "in": "header"
+            },
+            "admin": {
+                "type": "apiKey",
+                "name": "authorization",
+                "in": "header"
+            }
+        },
+        "basePath": "/api",
+        "outputDirectory": "server",
+        "specVersion": 3
+    },
+    "routes": {
+        "authenticationModule": "./server/middlewares/authentication.ts",
+        "basePath": "/api",
+        "routesDir": "server"
+    }
+}
