@@ -49,7 +49,7 @@ export class PurchaseOrderService extends BaseService<IPurchaseOrder> {
             });
             if (existingData) {
                 await this._model.updateOne({ _id: existingData._id }, { ...data, updatedAt: new Date() });
-                return existingData._id;
+                return existingData;
             } else {
                 const newData = {
                     ...data,
@@ -59,7 +59,7 @@ export class PurchaseOrderService extends BaseService<IPurchaseOrder> {
                 const purchaseOrder = new this._model(newData);
                 const result = await purchaseOrder.save();
 
-                return result._id.toString();
+                return result;
             }
         } catch (error) {
             console.log(error);

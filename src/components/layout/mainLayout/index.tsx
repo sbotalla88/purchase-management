@@ -4,14 +4,6 @@ import SidebarItem from '@components/layout/navigation/sidebar-item';
 import MobileNavigation from '@components/layout/navigation/mobile-navigation';
 import Logo from '@components/ui/logo';
 
-import cloneDeep from 'lodash/cloneDeep';
-import findIndex from 'lodash/findIndex';
-import { useDispatch } from 'react-redux';
-import { getPermission } from '@redux/vendorAccountMgmt/actions';
-import { getUserInfo } from '@redux/auth/actions';
-import Loader from '@components/ui/loader/loader';
-import { useRedux } from '@redux/index';
-
 const sideBar = [
     {
         href: '/purchase-orders',
@@ -26,16 +18,13 @@ type IMainProps = {
 };
 
 const MainLayout = ({ children, meta }: IMainProps) => {
-    const auth = useRedux('auth');
-
     const SidebarItemMap = () => (
         <Fragment>
             {sideBar.map(({ href, label, icon }, index: number) => (
-                <SidebarItem href={href} label={label} icon={icon} key={index} />
+                <SidebarItem href={href} label={label} icon={icon} index={index} />
             ))}
         </Fragment>
     );
-
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col transition-colors duration-150">
             {meta}

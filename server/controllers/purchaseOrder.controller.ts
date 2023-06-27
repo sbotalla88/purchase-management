@@ -1,15 +1,29 @@
-import { Route, Security, Get, SuccessResponse, Tags, Request, Example, Path, Query, Post, Body, UploadedFile, FormField } from 'tsoa';
+import {
+    Route,
+    Security,
+    Get,
+    SuccessResponse,
+    Tags,
+    Request,
+    Example,
+    Path,
+    Query,
+    Post,
+    Body,
+    UploadedFile,
+    FormField,
+} from 'tsoa';
 import HttpStatus from 'http-status-codes';
 import { PurchaseOrderService } from '../services';
 import { BaseController } from './_base';
-import { parseCSV, validateDate} from '../helpers'
+import { parseCSV, validateDate } from '../helpers';
 import type { ExRequest, IJsonResponseSuccess, IPaginationRes, IPurchaseOrderParams } from '../types';
 
 /**
  * Admin PurcahseOrder controller
  */
 @Tags('Admin PurchaseOrder')
-@Route('admin/purchaseOrder')
+@Route('admin/purcahseOrder')
 @Security('admin')
 export class AdminPurchaseOrderController extends BaseController<PurchaseOrderService> {
     constructor() {
@@ -27,12 +41,14 @@ export class AdminPurchaseOrderController extends BaseController<PurchaseOrderSe
             docs: [
                 {
                     vendor: 'John Doe',
-                    orders: [{
-                        modelNumber: 'model-1',
-                        unitPrice: 15.0,
-                        quantity: 10
-                    }],
-                    date: '2023-06-26T13:12:39.680+00:00'
+                    orders: [
+                        {
+                            modelNumber: 'model-1',
+                            unitPrice: 15.0,
+                            quantity: 10,
+                        },
+                    ],
+                    date: '2023-06-26T13:12:39.680+00:00',
                 },
             ],
             hasNextPage: false,
@@ -52,14 +68,14 @@ export class AdminPurchaseOrderController extends BaseController<PurchaseOrderSe
     async getPurchaseOrders(
         @Request() req: ExRequest,
         @Query('vendor') vendor?: string,
-        @Query('date') date?: string|Date,
+        @Query('date') date?: string | Date,
         @Query('page') page = 1,
         @Query('limit') limit = 10,
         @Query('pagination') pagination = true
     ): Promise<IJsonResponseSuccess<IPaginationRes<IPurchaseOrderParams>>> {
         const query: any = {
-            ...(vendor?{vendor}:{}),
-            ...(date?{date}:{})
+            ...(vendor ? { vendor } : {}),
+            ...(date ? { date } : {}),
         };
 
         const response = await this.service.fetchPurchaseOrders(query, page ?? 1, limit ?? 10);
@@ -83,46 +99,61 @@ export class AdminPurchaseOrderController extends BaseController<PurchaseOrderSe
     ): Promise<IJsonResponseSuccess<any>> {
         try {
             const isValidDate = validateDate(date);
-            if(!isValidDate){
-                return this.errorResponse({code:HttpStatus.BAD_REQUEST, message: 'Invalid date format'})
+            if (!isValidDate) {
+                return this.errorResponse({ code: HttpStatus.BAD_REQUEST, message: 'Invalid date format' });
             }
             const csvData = await parseCSV(csv.buffer.toString('utf8'));
-            
-            let invalidCSVCountObj = {
+
+            const invalidCSVCountObj = {
                 modelNumber: 0,
-                unitPrice:0,
-                quantity:0
+                unitPrice: 0,
+                quantity: 0,
             };
-            const validCSVData = csvData.filter((element:any)=>{
-                if(typeof element.modelNumber !== 'string' ){
+            const validCSVData = csvData.filter((element: any) => {
+                if (typeof element.modelNumber !== 'string') {
                     invalidCSVCountObj.modelNumber++;
                     return false;
-                } else if( Number.isNaN(parseFloat(element.unitPrice))){
+                } else if (Number.isNaN(parseFloat(element.unitPrice))) {
                     invalidCSVCountObj.unitPrice++;
                     return false;
-                } else if(Number(element.quantity) !== parseInt(element.quantity) || Number.isNaN(parseInt(element.quantity))){
+                } else if (
+                    Number(element.quantity) !== parseInt(element.quantity) ||
+                    Number.isNaN(parseInt(element.quantity))
+                ) {
                     invalidCSVCountObj.quantity++;
                     return false;
                 } else {
                     return true;
                 }
             });
-            if(validCSVData.length === 0){
-                return this.errorResponse({code:HttpStatus.BAD_REQUEST, message: 'Invalid CSV data'})
+            if (validCSVData.length === 0) {
+                return this.errorResponse({ code: HttpStatus.BAD_REQUEST, message: 'Invalid CSV data' });
             }
-            const message = `${invalidCSVCountObj.modelNumber?invalidCSVCountObj.modelNumber+' invalid model number out of '+ csvData.length+", ": ''}${invalidCSVCountObj.unitPrice?invalidCSVCountObj.unitPrice+' invalid unit price value out of '+ csvData.length+", ": ''}${invalidCSVCountObj.quantity?invalidCSVCountObj.quantity+' invalid quantity value out of '+ csvData.length+", ": ''}`;
+            const message = `${
+                invalidCSVCountObj.modelNumber
+                    ? invalidCSVCountObj.modelNumber + ' invalid model number out of ' + csvData.length
+                    : ''
+            }${
+                invalidCSVCountObj.unitPrice
+                    ? ', ' + invalidCSVCountObj.unitPrice + ' invalid unit price value out of ' + csvData.length
+                    : ''
+            }${
+                invalidCSVCountObj.quantity
+                    ? ', ' + invalidCSVCountObj.quantity + ' invalid quantity value out of ' + csvData.length
+                    : ''
+            }. Rest of them has been added successfully`;
             const data = {
                 vendor,
                 orders: validCSVData,
-                date
+                date,
             };
             const response = await this.service.addPurchaseOrder({ ...data });
             return this.successResponse({
                 data: response,
-                message
+                message,
             });
-        } catch (error:any) {
-            return this.errorResponse({message: error.message})
+        } catch (error: any) {
+            return this.errorResponse({ message: error.message });
         }
     }
 }

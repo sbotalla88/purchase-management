@@ -1,3 +1,3 @@
 import localforage from 'localforage';
 
-export const storage = localforage.createInstance({ name: '@clearsite_store' });
+export const storage = localforage.createInstance({ name: '@alpine_purchase_order_store' });

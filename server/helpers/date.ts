@@ -7,8 +7,7 @@ export const formatDate = (date?: string) => {
     return new Date(date).toISOString();
 };
 
-export const validateDate = (date: string|Date)=>{
+export const validateDate = (date: string | Date) => {
     const formattedDate = new Date(date);
     return formattedDate instanceof Date;
-}
-
+};

@@ -10,9 +10,16 @@ extensions:
 
 # Purchase Order Backend
 
+# Elapsed time for development
+- 4 hours for setting up project and backend api development
+- 3 hours for frontend development
+- 0.5 hour for testing and minor fixes
+
 ## Prerequisites
 
 - Node.js >= 16.x
+- NPM >= 6.12.x
+- Yarn >= 1.22.5
 
 ## Setup Configuration File
 

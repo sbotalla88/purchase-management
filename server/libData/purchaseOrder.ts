@@ -4,20 +4,18 @@ import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 import { IPurchaseOrder, IOrderInfo } from '../types';
 
-const OrderSchema = new Schema<IOrderInfo>(
-    {
-        modelNumber: {type: Schema.Types.String},
-        unitPrice: {type: Schema.Types.Number},
-        quantity: {type: Schema.Types.Number},
-    }
-)
+const OrderSchema = new Schema<IOrderInfo>({
+    modelNumber: { type: Schema.Types.String },
+    unitPrice: { type: Schema.Types.Number },
+    quantity: { type: Schema.Types.Number },
+});
 
 const PurchaseOrderSchema = new Schema<IPurchaseOrder>(
     {
         _id: { type: Schema.Types.ObjectId, auto: true, alias: 'id' },
         vendor: { type: Schema.Types.String },
-        orders: {type: [OrderSchema]},
-        date: {type: Schema.Types.Date},
+        orders: { type: [OrderSchema] },
+        date: { type: Schema.Types.Date },
         createdAt: { type: Date, default: new Date(), index: true },
         updatedAt: { type: Date, default: new Date(), index: true },
     },

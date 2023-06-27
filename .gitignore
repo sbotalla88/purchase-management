@@ -29,7 +29,6 @@ package-lock.json
 *-error.log
 next-env.d.ts
 
-
 #Log files
 logs
 *.log
