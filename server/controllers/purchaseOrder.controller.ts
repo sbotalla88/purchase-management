@@ -129,7 +129,7 @@ export class AdminPurchaseOrderController extends BaseController<PurchaseOrderSe
             if (validCSVData.length === 0) {
                 return this.errorResponse({ code: HttpStatus.BAD_REQUEST, message: 'Invalid CSV data' });
             }
-            const message = `${
+            const message =invalidCSVCountObj.modelNumber||invalidCSVCountObj.quantity||invalidCSVCountObj.unitPrice? `${
                 invalidCSVCountObj.modelNumber
                     ? invalidCSVCountObj.modelNumber + ' invalid model number out of ' + csvData.length
                     : ''
@@ -141,7 +141,7 @@ export class AdminPurchaseOrderController extends BaseController<PurchaseOrderSe
                 invalidCSVCountObj.quantity
                     ? ', ' + invalidCSVCountObj.quantity + ' invalid quantity value out of ' + csvData.length
                     : ''
-            }. Rest of them has been added successfully`;
+            }. Rest of them has been added successfully`: undefined;
             const data = {
                 vendor,
                 orders: validCSVData,
@@ -150,7 +150,7 @@ export class AdminPurchaseOrderController extends BaseController<PurchaseOrderSe
             const response = await this.service.addPurchaseOrder({ ...data });
             return this.successResponse({
                 data: response,
-                message,
+                ...(message?{message}:{}),
             });
         } catch (error: any) {
             return this.errorResponse({ message: error.message });
